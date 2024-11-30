@@ -1,0 +1,1 @@
+#This script is the main script that will be run to start the program
