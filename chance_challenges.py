@@ -29,7 +29,7 @@ def shell_game(nb=3)->bool:
     print("You lost! The key was under the shell", key)
     return False
 
-def roll_dice_game(nbthrows)->bool:
+def roll_dice_game(nbthrows=3)->bool:
     throws,finished=1,False
     while throws<=nbthrows:
         player, game_master = (rnd.randint(1, 6), rnd.randint(1, 6)) , (rnd.randint(1, 6), rnd.randint(1, 6))
@@ -46,5 +46,6 @@ def roll_dice_game(nbthrows)->bool:
     print("The game master won by default!")
     return False
 def chance_challenges():
-    challenges=[shell_game(rnd.randint(3,5)), roll_dice_game(rnd.randint(3,5))]
-    return rnd.choice(challenges)
+    challenges=[shell_game, roll_dice_game]
+    return rnd.choice(challenges)(rnd.randint(3,5))
+chance_challenges()
