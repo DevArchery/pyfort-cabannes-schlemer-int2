@@ -71,7 +71,32 @@ def math_challenge_prime()->bool:
         print("You lost! The nearest prime number to", n, "is", prime)
         return False
 
+def math_roulette():
+    """Implement a challenge where the player has to guess the result of a mathematical operation"""
+    numbers=[rnd.randint(1,10) for i in range(5)]
+    op=rnd.choice(["+","-","*"])
+    sol=numbers[0]
+    if op=="+":
+        for i in range(1,5):
+            sol+=numbers[i]
+    elif op=="-":
+        for i in range(1,5):
+            sol-=numbers[i]
+    elif op=="*":
+        for i in range(1,5):
+            sol*=numbers[i]
+    print(f"Calculate {numbers[0]} {op} {numbers[1]} {op} {numbers[2]} {op} {numbers[3]} {op} {numbers[4]} = ?")
+    guess=float(input())
+    if guess==sol:
+        print("Congratulations! You found the result!")
+        return True
+    else:
+        print("You lost! The result is", sol)
+        return False
+
+
 def math_challenges():
-    challenges=[math_challenge_equation,factorial_challenge,math_challenge_prime]
+    challenges=[math_challenge_equation,factorial_challenge,math_challenge_prime,math_roulette]
     return rnd.choice(challenges)()
+
 math_challenges()
