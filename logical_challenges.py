@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-=======
-
 
 global x
 global n
@@ -37,4 +34,4 @@ display_sticks(x)
 player_removal(x)
 
 
->>>>>>> Stashed changes
+
