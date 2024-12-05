@@ -8,14 +8,13 @@ def treasure_room():
     shows=list(data['Fort Boyard'][year].keys())
     show=choice(shows)
     chosen=data['Fort Boyard'][year][show]
-    print(chosen)
     for i in range(1,4):
         print(f"Clue {i}:"+chosen['Clues'][i])
     j=3
     for i in range(4,7):
         guess=uppercase(str(input("What is your answer? ")))
         if guess==chosen['CODE-WORD']:
-            print("Congratulations! You have found the treasure.")
+            print("Congratulations! You have found the codeword.")
             return True
         else:
             k=0
@@ -25,10 +24,10 @@ def treasure_room():
                 k+=1
     guess=uppercase(str(input("What is your answer? ")))
     if guess==chosen['CODE-WORD']:
-        print("Congratulations! You have found the treasure.")
+        print("Congratulations! You have found the codeword.")
         return True
     else:
-        print("You have failed to find the treasure.")
+        print("You have failed to find the codeword.")
         return False
 
 treasure_room()
