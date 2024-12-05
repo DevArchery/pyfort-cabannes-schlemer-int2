@@ -1,3 +1,4 @@
+import random as rnd
 class grid():
     def __init__(self):
         self.board = [["" for i in range(3)] for j in range(3)]
@@ -55,66 +56,40 @@ class grid():
         if self.board[i][i] == self.board[i+1][i+1] == self.board[i+2][i+2] != "" or self.board[i][i+2] == self.board[i+1][i+1] == self.board[i+2][i] != "":
             self.state = True
 
-    def minimax(self, board, depth, is_max):
-        score = self.evaluate(board)
-        if score == 10:
-            return score - depth
-        if score == -10:
-            return score + depth
-        if not self.is_moves_left(board):
-            return 0
-
-        if is_max:
-            best = -1000
-            for i in range(3):
-                for j in range(3):
-                    if board[i][j] == "":
-                        board[i][j] = "O"
-                        best = max(best, self.minimax(board, depth + 1, not is_max))
-                        board[i][j] = ""
-            return best
-        else:
-            best = 1000
-            for i in range(3):
-                for j in range(3):
-                    if board[i][j] == "":
-                        board[i][j] = "X"
-                        best = min(best, self.minimax(board, depth + 1, not is_max))
-                        board[i][j] = ""
-            return best
-
-    def evaluate(self, board):
-        for row in board:
-            if row[0] == row[1] == row[2] != "":
-                return 10 if row[0] == "O" else -10
-        for col in range(3):
-            if board[0][col] == board[1][col] == board[2][col] != "":
-                return 10 if board[0][col] == "O" else -10
-        if board[0][0] == board[1][1] == board[2][2] != "":
-            return 10 if board[0][0] == "O" else -10
-        if board[0][2] == board[1][1] == board[2][0] != "":
-            return 10 if board[0][2] == "O" else -10
-        return 0
-
-    def is_moves_left(self, board):
-        for row in board:
-            if "" in row:
-                return True
-        return False
-
     def optimal_move(self):
-        best_val = -1000
-        best_move = (-1, -1)
+        if self.can_win("O"):
+            return self.can_win("O")
+        if self.can_win("X"):
+            return self.can_win("X")
+        i,j=rnd.randint(0,2),rnd.randint(0,2)
+        if self.board[i][j] == "":
+            return (i, j)
+        else:
+            return self.optimal_move()
+
+
+    def can_win(self, char):
+        # Check rows for a winning move
         for i in range(3):
-            for j in range(3):
-                if self.board[i][j] == "":
-                    self.board[i][j] = "O"
-                    move_val = self.minimax(self.board, 0, False)
-                    self.board[i][j] = ""
-                    if move_val > best_val:
-                        best_move = (i, j)
-                        best_val = move_val
-        return best_move
+            if self.board[i].count(char) == 2 and self.board[i].count("") == 1:
+                return (i, self.board[i].index(""))
+
+        # Check columns for a winning move
+        for j in range(3):
+            col = [self.board[i][j] for i in range(3)]
+            if col.count(char) == 2 and col.count("") == 1:
+                return (col.index(""), j)
+
+        # Check diagonals for a winning move
+        diag1 = [self.board[i][i] for i in range(3)]
+        if diag1.count(char) == 2 and diag1.count("") == 1:
+            return (diag1.index(""), diag1.index(""))
+
+        diag2 = [self.board[i][2-i] for i in range(3)]
+        if diag2.count(char) == 2 and diag2.count("") == 1:
+            return (diag2.index(""), 2-diag2.index(""))
+
+        return None
 
     def start(self):
         while self.turn <= 9:
