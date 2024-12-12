@@ -98,5 +98,3 @@ def math_roulette():
 def math_challenges():
     challenges=[math_challenge_equation,factorial_challenge,math_challenge_prime,math_roulette]
     return rnd.choice(challenges)()
-
-math_challenges()

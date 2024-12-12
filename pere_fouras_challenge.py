@@ -9,19 +9,22 @@ def load_riddles(file:str):
 
 def pere_fouras_riddles()->bool:
     riddles=load_riddles("data/PFRiddles.json")
-    print(riddles)
     riddle=rnd.choice(riddles)
     print(riddle["question"])
-    guess=input()
     tries=3
-    while tries>1:
-        if uppercase(guess)==uppercase(riddle["answer"]):
+    while tries>=1:
+        guess = input()
+        size=len(riddle["answer"])
+        if 'the' in riddle["answer"]:
+            size-=3
+        if uppercase(guess) in uppercase(riddle["answer"]) and len(guess)==size:
             print("Congratulations! You found the answer!")
             return True
         else:
-            print("You have", tries-1, "tries left")
+            print(f"You have {tries-1} tries left")
         tries-=1
-        guess=input()
     print("You lost! The answer was", riddle["answer"])
     return False
-pere_fouras_riddles()
+
+if __name__ == "__main__":
+    pere_fouras_riddles()
