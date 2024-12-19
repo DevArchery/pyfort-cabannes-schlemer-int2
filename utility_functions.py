@@ -22,9 +22,11 @@ def compose_team()->list:
         for player in team:
             if player["Leader"]=="y":
                 check+=1
-        if check!=1:
+        if check>1:
             print("There should be exactly one leader in the team")
             return compose_team()
+        elif check==0:
+            team[0]["Leader"]="y"
         return team
     except ValueError:
         print("Please enter a valid number")
@@ -38,7 +40,7 @@ def compose_team()->list:
 def choose_player(team):
     print("Select a player to attempt the challenge:")
     for i, player in enumerate(team):
-        print(f"{i+1}. {player['Name']} ({player['Profession']})")
+        print(f"{i+1}. {player['Name']} ({player['Profession']}) - Leader ({player['Leader']})")
     try:
         choice=int(input("Enter the number of the player: "))
         assert len(team) >= choice >= 1

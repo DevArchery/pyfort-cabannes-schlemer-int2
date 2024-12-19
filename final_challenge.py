@@ -30,4 +30,5 @@ def treasure_room():
         print("You have failed to find the codeword.")
         return False
 
-treasure_room()
+if __name__ == "__main__":
+    treasure_room()

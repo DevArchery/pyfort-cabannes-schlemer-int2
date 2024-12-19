@@ -174,11 +174,17 @@ class grid():
 class Battleships:
     def __init__(self):
         self.board = []
+        self.history = []
         for i in range(3):
             self.board.append([" "] * 3)
+            self.history.append([" "] * 3)
         self.ships = []
     def display(self):
         for row in self.board:
+            print(" | {} | {} | {} |".format(row[0], row[1], row[2]))
+        print(" -------------")
+        print('History board')
+        for row in self.history:
             print(" | {} | {} | {} |".format(row[0], row[1], row[2]))
         print(" -------------")
     def place(self, x, y):
@@ -206,6 +212,7 @@ class Battleships:
                 print("Hit!")
                 opponent.ships = remove_value(opponent.ships, (x, y))
                 opponent.board[x][y]="X"
+                self.history[x][y]="X"
             else:
                 if opponent.board[x][y]==".":
                     print("You have already hit this location.")
@@ -213,6 +220,7 @@ class Battleships:
                 else:
                     print("Miss!")
                     opponent.board[x][y]="."
+                    self.history[x][y]="."
         except IndexError:
             self.player_shoot(opponent, int(input("Enter an x: ")), int(input("Enter a y: ")))
         except ValueError:
@@ -246,7 +254,8 @@ def battleship_game():
             print("Your boats")
             player.display()
             print("It's your turn to play")
-            player.player_shoot(master,int(input("Enter an x: ")),int(input("Enter a y: ")))
+            x,y=int(input("Enter an x: ")),int(input("Enter a y: "))
+            player.player_shoot(master,x,y)
             sleep(3)
             if len(master.ships)==0:
                 print("You have won!")
@@ -269,3 +278,6 @@ def logical_challenges():
         tictactoe.start()
     else:
         battleship_game()
+
+if __name__ == "__main__":
+    battleship_game()
