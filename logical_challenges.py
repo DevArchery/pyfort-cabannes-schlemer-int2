@@ -269,4 +269,3 @@ def logical_challenges():
         tictactoe.start()
     else:
         battleship_game()
-logical_challenges()

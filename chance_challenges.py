@@ -48,4 +48,3 @@ def roll_dice_game(nbthrows=3)->bool:
 def chance_challenges():
     challenges=[shell_game, roll_dice_game]
     return rnd.choice(challenges)(rnd.randint(3,5))
-chance_challenges()
