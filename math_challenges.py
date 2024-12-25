@@ -11,35 +11,59 @@ def factorial(n):
             return n*factorial(n-1)
     except AssertionError:
         return ValueError
-def factorial_challenge()->bool:
+def factorial_challenge(n=None)->bool:
     """Implement a challenge where the player has to calculate the factorial of a random number"""
-    n=rnd.randint(1,10)
-    print(f"Calculate the factorial of {n}")
-    guess=int(input())
-    fac=factorial(n)
-    if guess==fac:
-        print("Congratulations! You found the factorial!")
-        return True
-    else:
-        print("You lost! The factorial of", n, "is", fac)
-        return False
+    try:
+        if n is None:
+            n=rnd.randint(1,10)
+        print(f"Calculate the factorial of {n}")
+        guess=int(input())
+        fac=factorial(n)
+        if guess==fac:
+            print("Congratulations! You found the factorial!")
+            return True
+        else:
+            print("You lost! The factorial of", n, "is", fac)
+            return False
+    except TypeError:
+        return ValueError
+    except ValueError:
+        print("Please enter an integer")
+        return factorial_challenge()
+
 
 def linear_equation():
-    a,b=rnd.randint(1,10), rnd.randint(1,10)
+    a,b=rnd.randint(1,10), rnd.randint(-10,10)
     sol=-b/a
     return a,b,sol
 
-def math_challenge_equation()->int:
+def math_challenge_equation(a=None,b=None,sol=None)->int:
     """Implement a challenge where the player has to solve a linear equation"""
-    a,b,sol=linear_equation()
-    print(f"Solve the equation {a}x + {b} = 0")
-    guess=float(input())
-    if guess==sol:
-        print("Congratulations! You found the solution!")
-        return True
-    else:
-        print("You lost! The solution is", -b/a)
-        return False
+    try:
+        if a is None and b is None and sol is None:
+            a,b,sol=linear_equation()
+            assert len(str(sol))<=5
+
+        if b<0:
+            print(f"Solve the equation {a}x - {-b} = 0")
+        elif b==0:
+            print(f"Solve the equation {a}x = 0")
+        else:
+            print(f"Solve the equation {a}x + {b} = 0")
+        guess=float(input())
+        if guess==sol:
+            print("Congratulations! You found the solution!")
+            return True
+        else:
+            print("You lost! The solution is", -b/a)
+            return False
+    except ZeroDivisionError:
+        return ValueError
+    except ValueError:
+        print("Please enter a floating point number")
+        return math_challenge_equation(a,b,sol)
+    except AssertionError:
+        return math_challenge_equation()
 def is_prime(n):
     """Check if n is a prime number"""
     try:
@@ -98,3 +122,6 @@ def math_roulette():
 def math_challenges():
     challenges=[math_challenge_equation,factorial_challenge,math_challenge_prime,math_roulette]
     return rnd.choice(challenges)()
+
+if __name__=="__main__":
+    math_challenges()
