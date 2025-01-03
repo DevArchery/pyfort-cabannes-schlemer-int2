@@ -24,11 +24,11 @@ class PyfortGame:
             self.check_state()
             if self.state:
                 messagebox.showinfo("Game Over", "Player wins!")
-                return
+                return True
             self.turn += 1
             if self.turn == 9:
                 messagebox.showinfo("Game Over", "It's a tie!")
-                return
+                return False
             self.master_turn()
 
     def master_turn(self):
@@ -38,10 +38,11 @@ class PyfortGame:
         self.check_state()
         if self.state:
             messagebox.showinfo("Game Over", "Master wins!")
-            return
+            return False
         self.turn += 1
         if self.turn == 9:
             messagebox.showinfo("Game Over", "It's a tie!")
+            return False
 
     def check_state(self):
         for i in range(3):

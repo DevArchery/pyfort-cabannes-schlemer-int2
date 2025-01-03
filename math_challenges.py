@@ -3,15 +3,17 @@ import random as rnd
 def factorial(n):
     """Calculate the factorial of n"""
     try:
-        assert n>=0, "n must be a positive integer"
+        assert n>=0
 
         if n==0:
             return 1
         else:
             return n*factorial(n-1)
     except AssertionError:
-        return ValueError
-def factorial_challenge(n=None)->bool:
+        raise ValueError
+    except ValueError:
+        print(f"{n} isn't a natural number")
+def factorial_challenge(n=None)->bool or ValueError:
     """Implement a challenge where the player has to calculate the factorial of a random number"""
     try:
         if n is None:
@@ -20,7 +22,7 @@ def factorial_challenge(n=None)->bool:
         guess=int(input())
         fac=factorial(n)
         if guess==fac:
-            print("Congratulations! You found the factorial!")
+            print("Congratulations! You found the factorial and won a key")
             return True
         else:
             print("You lost! The factorial of", n, "is", fac)
@@ -37,7 +39,7 @@ def linear_equation():
     sol=-b/a
     return a,b,sol
 
-def math_challenge_equation(a=None,b=None,sol=None)->int:
+def math_challenge_equation(a=None,b=None,sol=None)->int or ValueError:
     """Implement a challenge where the player has to solve a linear equation"""
     try:
         if a is None and b is None and sol is None:
@@ -52,13 +54,13 @@ def math_challenge_equation(a=None,b=None,sol=None)->int:
             print(f"Solve the equation {a}x + {b} = 0")
         guess=float(input())
         if guess==sol:
-            print("Congratulations! You found the solution!")
+            print("Congratulations! You found the solution and won a key!")
             return True
         else:
             print("You lost! The solution is", -b/a)
             return False
     except ZeroDivisionError:
-        return ValueError
+        raise ValueError
     except ValueError:
         print("Please enter a floating point number")
         return math_challenge_equation(a,b,sol)

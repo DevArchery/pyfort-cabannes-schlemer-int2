@@ -3,6 +3,8 @@ from time import sleep
 from toolbox import remove_value
 global sticks
 
+class GUIVersion(Exception):
+    pass
 
 def display_sticks(sticks):
     for i in range(sticks):
@@ -41,6 +43,14 @@ def master_removal(sticks):
 
 
 def nim_game():
+    print("Welcome to the Nim game!")
+    print("The goal is to remove the last stick.")
+    print("You can remove 1, 2 or 3 sticks at a time.")
+    print("Since you will start, the master will always")
+    print("win as there exists an algorithm to always win when playing in second.")
+    print("To avoid that, the master has a chance to remove a random number of sticks.")
+    print("Let's start!")
+
     sticks = 20
 
     player = 1
@@ -150,27 +160,41 @@ class grid():
         return None
 
     def start(self):
-        while self.turn <= 9:
-            self.player_turn()
-            self.check_state()
-            if self.state:
-                print("Player wins!")
-                break
-            self.turn += 1
-            if self.turn == 9:
-                print("It's a tie!")
-                break
-            i, j = self.optimal_move()
-            self.master_turn(i, j)
-            self.check_state()
-            if self.state:
-                print("Master wins!")
-                break
-            self.turn += 1
-            if self.turn == 9:
-                print("It's a tie!")
-                break
-
+        try:
+            print("Welcome to Tic-Tac-Toe!")
+            print("You will be playing against the master.")
+            print("You will be X and the master will be O.")
+            print("You can select a cell by entering the x and y coordinates.")
+            print("If you want to try the graphical version, please enter 'GUI'")
+            if input()=="GUI":
+                raise GUIVersion
+            while self.turn <= 9:
+                self.player_turn()
+                self.check_state()
+                if self.state:
+                    print("Player wins!")
+                    break
+                self.turn += 1
+                if self.turn == 9:
+                    print("It's a tie!")
+                    break
+                i, j = self.optimal_move()
+                self.master_turn(i, j)
+                self.check_state()
+                if self.state:
+                    print("Master wins!")
+                    break
+                self.turn += 1
+                if self.turn == 9:
+                    print("It's a tie!")
+                    break
+        except GUIVersion:
+            import tkinter as tk
+            import TTTGUI
+            root = tk.Tk()
+            game = TTTGUI.PyfortGame(root)
+            root.mainloop()
+            return True if game.state else False
 class Battleships:
     def __init__(self):
         self.board = []
@@ -241,6 +265,12 @@ class Battleships:
                 print("Miss!")
                 opponent.board[x][y] = "."
 def battleship_game():
+    print("Welcome to Battleships!")
+    print("You will be playing against the master.")
+    print("The master will place its boats first.")
+    print("You will then place your boats.")
+    print("You will then take turns to shoot at each other's boats.")
+    print("The first player to sink all of the opponent's boats wins.")
     turn = 1
     player, master = Battleships(), Battleships()
     master.boat_master()
@@ -280,4 +310,5 @@ def logical_challenges():
         battleship_game()
 
 if __name__ == "__main__":
-    battleship_game()
+    tictactoe = grid()
+    print(tictactoe.start())
