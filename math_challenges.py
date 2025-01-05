@@ -35,6 +35,7 @@ def factorial_challenge(n=None)->bool or ValueError:
 
 
 def linear_equation():
+    """Generate a random linear equation"""
     a,b=rnd.randint(1,10), rnd.randint(-10,10)
     sol=-b/a
     return a,b,sol
@@ -122,6 +123,7 @@ def math_roulette():
 
 
 def math_challenges():
+    """Randomly select a math challenge and starts it"""
     challenges=[math_challenge_equation,factorial_challenge,math_challenge_prime,math_roulette]
     return rnd.choice(challenges)()
 

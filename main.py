@@ -3,6 +3,7 @@ import final_challenge as final
 from toolbox import uppercase
 
 def game():
+    """Main function to run the game"""
     utils.introduction()
     team = utils.compose_team()
     keys = Keys()
@@ -14,7 +15,7 @@ def game():
     while attempts > 0:
         if keys.check_keys():
             break
-        player = utils.choose_player(team)
+        utils.choose_player(team)
         if utils.challenge_menu():
             keys.add_key()
             wins += 1
@@ -41,6 +42,7 @@ def save_game_results(challenges_attempted, wins, losses, code_word_found):
         file.write("\n")
 
 class Keys:
+    """Class to keep track of the keys obtained by the player"""
     def __init__(self):
         self.keys = 0
 

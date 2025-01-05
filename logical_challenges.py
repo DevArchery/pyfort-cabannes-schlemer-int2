@@ -1,39 +1,54 @@
 import random as rnd
 from time import sleep
 from toolbox import remove_value
-global sticks
 
+#Creation of an exception used to switch to the GUI version of tictactoe
 class GUIVersion(Exception):
     pass
 
+# Nim game
+#make the sticks variable global so that it can be accessed by the functions used in the Nim game
+global sticks
+
 def display_sticks(sticks):
+    """Display the sticks left"""
     for i in range(sticks):
         print("|", end="")
 
     print()
 
 
-def player_removal(sticks, player):
-    print("Player", player, "how many sticks do you want to remove? (1, 2 or 3)")
-
-    removed = int(input())
-
-    while removed not in [1, 2, 3]:
-        print("Please enter a valid number of sticks to remove (1, 2 or 3)")
+def player_removal(sticks):
+    """Asks the users how many sticks does he want to remove and if it is either 1,2 or 3, """
+    try:
+        print("How many sticks do you want to remove? (1, 2 or 3)")
 
         removed = int(input())
 
-    sticks -= removed
+        if removed not in [1, 2, 3]:
+            raise ValueError
 
-    return sticks
+        sticks -= removed
 
+        return sticks
+    except ValueError:
+        print("Please enter a valid number of sticks.")
+        return player_removal(sticks)
+    except TypeError:
+        raise ValueError
 
 
 def master_removal(sticks):
-    removed = sticks % 4
+    """The master haas a 10% chance to remove a random number of sticks, otherwise it will remove the number of sticks left modulo 4"""
+    if sticks==1:
+        removed=1
+    elif rnd.random() <= 0.1:
+        removed = rnd.randint(1, 3)
+    else:
+        removed = sticks % 4
 
-    if removed == 0:
-        removed = 1
+        if removed == 0:
+            removed = 1
 
     print("The master removed", removed, "sticks")
 
@@ -43,6 +58,7 @@ def master_removal(sticks):
 
 
 def nim_game():
+    """Starts the Nim game and explains the rules"""
     print("Welcome to the Nim game!")
     print("The goal is to remove the last stick.")
     print("You can remove 1, 2 or 3 sticks at a time.")
@@ -57,23 +73,24 @@ def nim_game():
 
     while sticks > 0:
         print("There are", sticks, "sticks left")
-
         display_sticks(sticks)
-
-        sticks = player_removal(sticks, player)
-
+        sticks = player_removal(sticks)
+        if sticks == 1:
+            print("You won!")
+            return True
         sticks = master_removal(sticks)
-
-    print("Player", player, "lost!")
-
-
+    print("You lost!")
+    return False
+#Creation of the grid class used for the Tic-Tac-Toe game
 class grid():
     def __init__(self):
+        """Initializes the board as a 3x3 matrix, the turn and the state of the game"""
         self.board = [["" for i in range(3)] for j in range(3)]
         self.turn = 0
         self.state = False
 
     def display_grid(self):
+        """Displays the grid"""
         for i in range(3):
             for j in range(3):
                 if j == 2:
@@ -97,6 +114,8 @@ class grid():
                 print()
 
     def player_turn(self):
+        """Asks the player for the coordinates of the cell he wants to fill, in case the cell is already taken, it will ask for another one by
+        raising a ValueError"""
         try:
             x = int(input("Enter the x coordinate: "))
             y = int(input("Enter the y coordinate: "))
@@ -113,30 +132,36 @@ class grid():
             self.player_turn()
 
     def master_turn(self, i, j):
+        """Places an O in the cell (i,j)"""
         self.board[i][j] = "O"
         self.display_grid()
 
     def check_state(self):
+        """Checks if the game is over by checking the rows, columns and diagonals"""
+        #  lines and columns
         for i in range(3):
             if self.board[i][0] == self.board[i][1] == self.board[i][2] != "" or self.board[0][i] == self.board[1][i] == self.board[2][i] != "":
                 self.state = True
+        # diagonals
         i = 0
         if self.board[i][i] == self.board[i+1][i+1] == self.board[i+2][i+2] != "" or self.board[i][i+2] == self.board[i+1][i+1] == self.board[i+2][i] != "":
             self.state = True
 
     def optimal_move(self):
-        if self.can_win("O"):
+        """Returns the optimal move for the master to play, if it can win, it will play the winning move, if it can't win but it can
+        block the player from winning, it will play that move,otherwise it will play a random move"""
+        if self.can_win("O"): #if the master can win
             return self.can_win("O")
-        if self.can_win("X"):
+        if self.can_win("X"): #if the master can block the player from winning
             return self.can_win("X")
         i,j=rnd.randint(0,2),rnd.randint(0,2)
         if self.board[i][j] == "":
             return (i, j)
         else:
-            return self.optimal_move()
-
+            return self.optimal_move()#if the cell is already taken, it will try again, it is far from optimal it terms of complexity but it is a simple solution
 
     def can_win(self, char):
+        """Checks if a character ("X" or "O") can win in the next move by checking the rows, columns and diagonals"""
         # Check rows for a winning move
         for i in range(3):
             if self.board[i].count(char) == 2 and self.board[i].count("") == 1:
@@ -160,6 +185,8 @@ class grid():
         return None
 
     def start(self):
+        """Starts the game and explains the rules, then asks if the player wants to play the graphical version, in which
+         case it will raise the GUIVersion exception defined earlier"""
         try:
             print("Welcome to Tic-Tac-Toe!")
             print("You will be playing against the master.")
@@ -195,8 +222,10 @@ class grid():
             game = TTTGUI.PyfortGame(root)
             root.mainloop()
             return True if game.state else False
+#Creation of the Battleships class used for the Battleships game
 class Battleships:
     def __init__(self):
+        """Initializes the board as a 3x3 matrix, the history board as a 3x3 matrix, the ships location list"""
         self.board = []
         self.history = []
         for i in range(3):
@@ -204,6 +233,7 @@ class Battleships:
             self.history.append([" "] * 3)
         self.ships = []
     def display(self):
+        """Displays the board and the history board"""
         for row in self.board:
             print(" | {} | {} | {} |".format(row[0], row[1], row[2]))
         print(" -------------")
@@ -212,6 +242,7 @@ class Battleships:
             print(" | {} | {} | {} |".format(row[0], row[1], row[2]))
         print(" -------------")
     def place(self, x, y):
+        """Places a ship in the cell (x,y) if it is empty, otherwise it will ask for another cell"""
         try:
             if (x, y) in self.ships:
                 print("There is already a ship here.")
@@ -222,7 +253,10 @@ class Battleships:
         except IndexError:
             print("Please enter a valid coordinate.")
             self.place(int(input("Enter an x: ")), int(input("Enter a y: ")))
+        except ValueError:
+            raise IndexError
     def boat_master(self):
+        """Places a ship in a random cell, if the cell is already taken, it will try again"""
         x = rnd.randint(0, 2)
         y = rnd.randint(0, 2)
         if (x, y) in self.ships:
@@ -231,6 +265,7 @@ class Battleships:
             self.place(x, y)
             self.ships.append((x, y))
     def player_shoot(self,opponent,x,y):
+        """The player shoots at the cell (x,y) of the opponent, if it is a hit, it will remove the ship from the opponent's ships list"""
         try:
             if (x,y) in opponent.ships:
                 print("Hit!")
@@ -251,10 +286,10 @@ class Battleships:
             self.player_shoot(opponent, int(input("Enter an x: ")), int(input("Enter a y: ")))
 
     def master_shoot(self, opponent):
+        """The master shoots at a random cell, if it is a hit, it will remove the ship from the opponent's ships list"""
         x = rnd.randint(0, 2)
         y = rnd.randint(0, 2)
         if opponent.board[x][y] == "X" or opponent.board[x][y] == ".":
-            print("You have already hit this location.")
             self.master_shoot(opponent)
         else:
             if (x, y) in opponent.ships:
@@ -265,6 +300,7 @@ class Battleships:
                 print("Miss!")
                 opponent.board[x][y] = "."
 def battleship_game():
+    """Starts the Battleships game and explains the rules"""
     print("Welcome to Battleships!")
     print("You will be playing against the master.")
     print("The master will place its boats first.")
@@ -299,6 +335,7 @@ def battleship_game():
                 return False
         turn+=1
 def logical_challenges():
+    """Randomly selects a challenge from the list of challenges and starts it"""
     challenges=["Nim","Tic-Tac-Toe","Battleships"]
     chosen=rnd.choice(challenges)
     if chosen=="Nim":

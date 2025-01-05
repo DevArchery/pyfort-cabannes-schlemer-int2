@@ -4,11 +4,15 @@ from chance_challenges import chance_challenges
 from logical_challenges import logical_challenges
 from pere_fouras_challenge import pere_fouras_riddles
 def introduction():
+    """Print the introduction of the game"""
     print("Welcome to PyFort!")
     print("To unlock the treasure room, you will need 3 keys")
     print("Your team will need to complete challenges to obtain these keys")
 
 def compose_team()->list:
+    """Prompts the user to enter the number of team members (between 1 and 3),
+    and for each member, their name, profession, and whether they are the leader.
+    Ensures there is exactly one leader in the team."""
     try:
         n=int(input("Enter the number of team members: "))
         assert 3 >= n >= 1
@@ -32,11 +36,9 @@ def compose_team()->list:
         print("Please enter a valid number")
         return compose_team()
     except TypeError:
-        print("Please enter a valid number")
-        return compose_team()
+        raise ValueError
     except AssertionError:
-        print("Please enter a valid number")
-        return compose_team()
+        raise ValueError
 def choose_player(team):
     print("Select a player to attempt the challenge:")
     for i, player in enumerate(team):
@@ -55,6 +57,7 @@ def choose_player(team):
         print("Please enter a valid number")
         return choose_player(team)
 def challenge_menu():
+    """Print the menu of challenges and prompt the user to select a challenge"""
     print("Select a challenge to attempt:")
     print("1. Math Challenges")
     print("2. Chance Challenges")
@@ -76,5 +79,6 @@ def challenge_menu():
         return challenge_menu()
 
 def record_history( player:dict, challenge:str, result:bool,keys:int):
+    """Record the history of the game in a text file"""
     with open("history.txt","a") as file:
         file.write(f"{player['Name']} ({player['Profession']}) attempted the {challenge} and {'succeeded' if result else 'failed'},\nbringing the total number of keys to {keys}\n")

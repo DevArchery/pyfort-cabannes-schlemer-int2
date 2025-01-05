@@ -2,6 +2,7 @@ import json
 from toolbox import uppercase
 from random import randint,choice
 def treasure_room():
+    """Implement the treasure room challenge where the player has to find the codeword to unlock the treasure room"""
     with open('data/TRClues.json') as f:
         data = json.load(f)
     year=str(randint(2015,2019))
